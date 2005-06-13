@@ -10,6 +10,13 @@ CParameter::CParameter(int argc, char **argv)
 {
 	m_iArgc = argc;
 	m_pArgv = argv;
+
+	m_Param.apply=0;
+	m_Param.create=0;
+	m_Param.help=0;
+	m_Param.license=0;
+	m_Param.version=0;
+
 }
 
 CParameter::~CParameter()
@@ -18,8 +25,49 @@ CParameter::~CParameter()
 
 bool CParameter::Evaluate()
 {
-	return(false);
+	bool RetVal;
+	int i;
+
+	RetVal=true;
+
+	if(m_iArgc<=1)
+	{
+		RetVal=false;
+	}
+
+	for(i=1;i<m_iArgc;i++)
+	{
+		if(strcmp("-c",m_pArgv[i]) == 0 || strcmp("--create",m_pArgv[i]) == 0)
+		{
+			m_Param.create+=1;
+		}
+		else if(strcmp("-a",m_pArgv[i]) == 0 || strcmp("--apply",m_pArgv[i]) == 0)
+		{
+			m_Param.apply+=1;
+		}
+		else if(strcmp("-?",m_pArgv[i]) == 0 || strcmp("--help",m_pArgv[i]) == 0)
+		{
+			m_Param.help+=1;
+		}
+		else if(strcmp("--license",m_pArgv[i]) == 0)
+		{
+			m_Param.license+=1;
+		}
+		else if(strcmp("--version",m_pArgv[i]) == 0)
+		{
+			m_Param.version+=1;
+		}
+	}
+
+	return(RetVal);
 }
+
+Parameters CParameter::GetParameters()
+{
+
+	return(m_Param);
+}
+
 
 void CParameter::ShowUsage()
 {

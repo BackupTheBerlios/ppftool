@@ -18,6 +18,10 @@ int main(int argc, char **argv)
 		param->ShowUsage();
 	}
 
+	Parameters p = param->GetParameters();
+
+//	printf("%d\n",p.apply);
+
 	delete(param);
 	return(0);
 }

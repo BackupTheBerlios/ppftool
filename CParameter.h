@@ -8,6 +8,16 @@
 #define _CPARAMETER__H
 
 #include <stdio.h>
+#include <string.h>
+
+struct Parameters
+{
+	int create;
+	int apply;
+	int help;
+	int license;
+	int version;
+};
 
 class CParameter
 {
@@ -17,10 +27,12 @@ class CParameter
 		~CParameter();
 		bool Evaluate();
 		void ShowUsage();
+		Parameters GetParameters();
 
   private:
 		int m_iArgc;
 		char** m_pArgv;
+		Parameters m_Param;
 
 };
 
