@@ -27,51 +27,14 @@
  *
  */
 
-#include <stdio.h>
-#include "CEndian.h"
-#include "CParameter.h"
-#include "License.h"
+#include "CPPF.h"
 
-#define VERSION "1.0.0"
-#define DATE "Jun 27 2005"
-
-int main(int argc, char **argv)
+CPPF::CPPF(int version)
 {
-	CParameter *param = new CParameter(argc, argv);
+	m_iVersion=version;
+}
 
-	// Evaluate parameters given in shell/console
-	if(param->Evaluate() == false && param->GetParameters().unknown >= 1)
-	{
-		return(-1);
-	}
-	else if(param->Evaluate() == false && param->GetParameters().unknown == 0)
-	{
-		param->ShowUsage();
-		return(-1);
-	}
-
-	if(param->GetParameters().license == 1)
-	{
-		printf("%s",license);
-		return(0);
-	}
-
-	if(param->GetParameters().help == 1)
-	{
-		param->ShowUsage();
-		return(0);
-	}
-
-	if(param->GetParameters().version == 1)
-	{
-		printf("Version ........ : %s\n",VERSION);
-		printf("Date ........... : %s\n",DATE);
-		printf("Compilestamp ... : %s %s\n",__DATE__,__TIME__);
-		printf("Endian Format .. : %s\n","Big Endian");
-		return(0);
-	}
-
-	delete(param);
-	return(0);
+CPPF::~CPPF()
+{
 }
 

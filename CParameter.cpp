@@ -33,8 +33,6 @@ CParameter::CParameter(int argc, char **argv)
 {
 	m_iArgc = argc;
 	m_pArgv = argv;
-
-	memset(&m_Param,0,sizeof(m_Param));
 }
 
 CParameter::~CParameter()
@@ -47,6 +45,9 @@ bool CParameter::Evaluate()
 	int i;
 
 	RetVal=true;
+
+	// Parameterstructure reset.
+	memset(&m_Param,0,sizeof(m_Param));
 
 	// No Parameter given?
 	if(m_iArgc<=1)
