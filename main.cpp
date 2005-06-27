@@ -32,12 +32,17 @@
 #include "CParameter.h"
 #include "License.h"
 
+#include <string.h>
+
 #define VERSION "1.0.0"
 #define DATE "Jun 27 2005"
 
 int main(int argc, char **argv)
 {
+
 	CParameter *param = new CParameter(argc, argv);
+	CEndian *endian = new CEndian();
+
 
 	// Evaluate parameters given in shell/console
 	if(param->Evaluate() == false && param->GetParameters().unknown >= 1)
@@ -67,11 +72,19 @@ int main(int argc, char **argv)
 		printf("Version ........ : %s\n",VERSION);
 		printf("Date ........... : %s\n",DATE);
 		printf("Compilestamp ... : %s %s\n",__DATE__,__TIME__);
-		printf("Endian Format .. : %s\n","Big Endian");
+		if(endian->BigEndian()==true)
+		{
+			printf("Endian Format .. : %s\n","Big Endian");
+		}
+		else if(endian->LittleEndian()==true)
+		{
+			printf("Endian Format .. : %s\n","Little Endian");
+		}
 		return(0);
 	}
 
 	delete(param);
+	delete(endian);
 	return(0);
 }
 

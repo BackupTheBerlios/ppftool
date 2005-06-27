@@ -31,7 +31,10 @@
 #define _CPARAMETER__H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
+
 
 #define APPLY_SHORT "-a"
 #define APPLY_LONG "--apply"
@@ -87,6 +90,14 @@ struct Parameters
 	int license;
 	int version;
 	int unknown;
+
+	int binary;
+	int original;
+	int ppf;
+	int fileid;
+	
+	int description;
+	int use_version;
 };
 
 class CParameter
@@ -100,10 +111,16 @@ class CParameter
 		Parameters GetParameters();
 
   private:
+		int CheckValueParameter(char *p);
 		int m_iArgc;
 		char** m_pArgv;
 		Parameters m_Param;
-
+		void* m_pBinaryName;
+		void* m_pOriginalName;
+		void* m_pPPFName;
+		void* m_pFileIDName;
+		void* m_pDescription;
+		int m_iUseVersion;
 };
 
 #endif

@@ -33,10 +33,41 @@ CParameter::CParameter(int argc, char **argv)
 {
 	m_iArgc = argc;
 	m_pArgv = argv;
+	m_pBinaryName=NULL;
+	m_pOriginalName=NULL;
+	m_pPPFName=NULL;
+	m_pFileIDName=NULL;
+	m_pDescription=NULL;
+	m_iUseVersion=0;
 }
 
 CParameter::~CParameter()
 {
+	if(m_pBinaryName!=NULL)
+	{
+		free(m_pBinaryName);
+	}
+
+	if(m_pOriginalName!=NULL)
+	{
+		free(m_pOriginalName);
+	}
+
+	if(m_pPPFName!=NULL)
+	{
+		free(m_pPPFName);
+	}
+
+	if(m_pFileIDName!=NULL)
+	{
+		free(m_pFileIDName);
+	}
+
+	if(m_pDescription!=NULL)
+	{
+		free(m_pDescription);
+	}
+
 }
 
 bool CParameter::Evaluate()
@@ -96,8 +127,17 @@ bool CParameter::Evaluate()
 			}
 			else
 			{
-				printf("Unknown Parameter: %s\n",m_pArgv[i]);
-				m_Param.unknown+=1;
+				int ret = CheckValueParameter(m_pArgv[i]);
+
+				if(ret==1)
+				{
+					printf("Unknown Parameter: %s\n",m_pArgv[i]);
+					m_Param.unknown+=1;
+				}
+				else if(ret==2)
+				{
+					m_Param.unknown+=1;
+				}
 			}
 		}
 	}
@@ -117,7 +157,11 @@ bool CParameter::Evaluate()
 		 || m_Param.license > 1
 		 || m_Param.primodvd > 1
 		 || m_Param.undodata > 1
-		 || m_Param.version > 1)
+		 || m_Param.version > 1
+		 || m_Param.binary > 1
+		 || m_Param.original > 1
+		 || m_Param.ppf > 1
+		 || m_Param.fileid > 1)
 	{
 		RetVal = false;
 	}
@@ -125,9 +169,169 @@ bool CParameter::Evaluate()
 	return(RetVal);
 }
 
+int CParameter::CheckValueParameter(char *p)
+{
+	int RetVal;
+	char* value;
+	int idx;
+
+	RetVal=0;
+	idx=(int)strcspn(p,"=");
+
+	if(idx==strlen(p)) 
+	{
+		RetVal=1;
+	}
+	else
+	{
+		value = strchr(p,'=')+1;
+		p[idx]=0x00;
+		if(strcmp(BINARY_SHORT,p) == 0 || strcmp(BINARY_LONG,p) == 0)
+		{
+			m_Param.binary+=1;
+			if(m_pBinaryName!=NULL)
+			{
+				free(m_pBinaryName);
+				m_pBinaryName=NULL;
+			}
+			m_pBinaryName = malloc(strlen(value)+2);
+			if(m_pBinaryName!=NULL)
+			{
+				memset(m_pBinaryName,0,strlen(value)+2);
+				strcpy((char*)m_pBinaryName,value);
+			}
+			else
+			{
+				printf("Internal error at %s, contact author\n",p);
+				RetVal=2;
+			}
+		}
+		else if(strcmp(PPF_SHORT,p) == 0 || strcmp(PPF_LONG,p) == 0)
+		{
+			m_Param.ppf+=1;
+			if(m_pPPFName!=NULL)
+			{
+				free(m_pPPFName);
+				m_pPPFName=NULL;
+			}
+			m_pPPFName = malloc(strlen(value)+2);
+			if(m_pPPFName!=NULL)
+			{
+				memset(m_pPPFName,0,strlen(value)+2);
+				strcpy((char*)m_pPPFName,value);
+			}
+			else
+			{
+				printf("Internal error at %s, contact author\n",p);
+				RetVal=2;
+			}
+		}
+		else if(strcmp(FILEID_SHORT,p) == 0 || strcmp(FILEID_LONG,p) == 0)
+		{
+			m_Param.fileid+=1;
+			if(m_pFileIDName!=NULL)
+			{
+				free(m_pFileIDName);
+				m_pFileIDName=NULL;
+			}
+			m_pFileIDName = malloc(strlen(value)+2);
+			if(m_pFileIDName!=NULL)
+			{
+				memset(m_pFileIDName,0,strlen(value)+2);
+				strcpy((char*)m_pFileIDName,value);
+			}
+			else
+			{
+				printf("Internal error at %s, contact author\n",p);
+				RetVal=2;
+			}
+		}
+		else if(strcmp(ORIGINAL_SHORT,p) == 0 || strcmp(ORIGINAL_LONG,p) == 0)
+		{
+			m_Param.original+=1;
+			if(m_pOriginalName!=NULL)
+			{
+				free(m_pOriginalName);
+				m_pOriginalName=NULL;
+			}
+			m_pOriginalName = malloc(strlen(value)+2);
+			if(m_pOriginalName!=NULL)
+			{
+				memset(m_pOriginalName,0,strlen(value)+2);
+				strcpy((char*)m_pOriginalName,value);
+			}
+			else
+			{
+				printf("Internal error at %s, contact author\n",p);
+				RetVal=2;
+			}
+		}
+		else if(strcmp(DESCRIPTION_SHORT,p) == 0 || strcmp(DESCRIPTION_LONG,p) == 0)
+		{
+			m_Param.description+=1;
+			if(m_pDescription!=NULL)
+			{
+				free(m_pDescription);
+				m_pDescription=NULL;
+			}
+			m_pDescription = malloc(strlen(value)+2);
+			if(m_pDescription!=NULL)
+			{
+				memset(m_pDescription,0,strlen(value)+2);
+				strcpy((char*)m_pDescription,value);
+			}
+			else
+			{
+				printf("Internal error at %s, contact author\n",p);
+				RetVal=2;
+			}
+		}
+		else if(strcmp(USEVERSION_SHORT,p) == 0 || strcmp(USEVERSION_LONG,p) == 0)
+		{
+			m_Param.use_version+=1;
+			m_iUseVersion=atoi(value);
+			if(m_iUseVersion==0)
+			{
+				printf("Unknown Version: %s\n",value);
+				RetVal=2;
+			}
+		}
+		else
+		{
+			RetVal=1;
+		}
+		p[idx]='=';
+	}
+
+/*
+	char *fname;
+	char *opt;
+
+	fname=strchr(argv[1],'=')+1;
+	int i=strcspn(argv[1],"!");
+	if(i==strlen(argv[1]))
+	{
+		printf("nix!\n");
+	}
+
+	opt=argv[1];
+	opt[i]=0x00;
+
+	printf("%d\n",strcspn(argv[1],"=")+1);
+
+	//KANN NULL SEIN
+	printf("%s\n",fname);
+
+	//KANN strlen() sein
+	printf("%s\n",opt);
+*/
+
+	return(RetVal);
+}
+
+
 Parameters CParameter::GetParameters()
 {
-
 	return(m_Param);
 }
 
