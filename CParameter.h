@@ -78,6 +78,8 @@
 #define DESCRIPTION_SHORT "-s"
 #define DESCRIPTION_LONG "--description"
 
+#define TYPE_FILENAME 1
+
 struct Parameters
 {
 	int create;
@@ -109,6 +111,8 @@ class CParameter
 		bool Evaluate();
 		void ShowUsage();
 		Parameters GetParameters();
+		int GetUseVersion();
+		char* GetString(int type);
 
   private:
 		int CheckValueParameter(char *p);

@@ -29,12 +29,36 @@
 
 #include "CPPF.h"
 
-CPPF::CPPF(int version)
+CPPF::CPPF(CParameter* param, CEndian *endian)
 {
-	m_iVersion=version;
+	m_pParam = param;
+	m_pEndian = endian;
 }
 
 CPPF::~CPPF()
 {
 }
 
+bool CPPF::Evaluate()
+{
+
+	bool RetVal;
+
+	RetVal=true;
+	if(m_pParam->GetParameters().apply==1 && m_pParam->GetParameters().create==1)
+	{
+		printf("Cannot apply and create the same time.\n");
+		RetVal=false;
+	}
+	else if(m_pParam->GetParameters().apply==0 && m_pParam->GetParameters().create==0)
+	{
+		printf("Please specify either create or apply.\n");
+		RetVal=false;
+	}
+	else
+	{
+		//Try to open all files.
+	}
+
+	return(RetVal);
+}

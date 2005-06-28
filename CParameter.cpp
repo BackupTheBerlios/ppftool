@@ -303,29 +303,6 @@ int CParameter::CheckValueParameter(char *p)
 		p[idx]='=';
 	}
 
-/*
-	char *fname;
-	char *opt;
-
-	fname=strchr(argv[1],'=')+1;
-	int i=strcspn(argv[1],"!");
-	if(i==strlen(argv[1]))
-	{
-		printf("nix!\n");
-	}
-
-	opt=argv[1];
-	opt[i]=0x00;
-
-	printf("%d\n",strcspn(argv[1],"=")+1);
-
-	//KANN NULL SEIN
-	printf("%s\n",fname);
-
-	//KANN strlen() sein
-	printf("%s\n",opt);
-*/
-
 	return(RetVal);
 }
 
@@ -333,6 +310,16 @@ int CParameter::CheckValueParameter(char *p)
 Parameters CParameter::GetParameters()
 {
 	return(m_Param);
+}
+
+int CParameter::GetUseVersion()
+{
+	return(m_iUseVersion);
+}
+
+char* CParameter::GetString(int type)
+{
+	return(NULL);
 }
 
 

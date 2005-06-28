@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include "CEndian.h"
 #include "CParameter.h"
+#include "CPPF.h"
 #include "License.h"
 
 #include <string.h>
@@ -42,31 +43,43 @@ int main(int argc, char **argv)
 
 	CParameter *param = new CParameter(argc, argv);
 	CEndian *endian = new CEndian();
+	CPPF *ppf = new CPPF(param, endian);
 
-
-	// Evaluate parameters given in shell/console
+	// Evaluate parameters given in shell/console, show Usage if something is
+	// inconsistent
 	if(param->Evaluate() == false && param->GetParameters().unknown >= 1)
 	{
+		delete(param);
+		delete(endian);
 		return(-1);
 	}
 	else if(param->Evaluate() == false && param->GetParameters().unknown == 0)
 	{
 		param->ShowUsage();
+		delete(param);
+		delete(endian);
 		return(-1);
 	}
 
+	// View license
 	if(param->GetParameters().license == 1)
 	{
 		printf("%s",license);
+		delete(param);
+		delete(endian);
 		return(0);
 	}
 
+	// View help
 	if(param->GetParameters().help == 1)
 	{
 		param->ShowUsage();
+		delete(param);
+		delete(endian);
 		return(0);
 	}
 
+	// View version
 	if(param->GetParameters().version == 1)
 	{
 		printf("Version ........ : %s\n",VERSION);
@@ -80,11 +93,24 @@ int main(int argc, char **argv)
 		{
 			printf("Endian Format .. : %s\n","Little Endian");
 		}
+		delete(param);
+		delete(endian);
 		return(0);
 	}
 
+	// Evaluate CPPF, to go sure everything the user entered in shell is okay
+	if(ppf->Evaluate()==false)
+	{
+		delete(param);
+		delete(endian);
+		delete(ppf);
+		return(-1);
+	}
+
+
 	delete(param);
 	delete(endian);
+	delete(ppf);
 	return(0);
 }
 

@@ -30,14 +30,20 @@
 #ifndef _CPPF__H
 #define _CPPF__H
 
+#include "CParameter.h"
+#include "CEndian.h"
+
 class CPPF
 {
 	public:
-		CPPF(int version);
+		CPPF(CParameter* param, CEndian *endian);
 		~CPPF();
+		bool Evaluate();
+
 	private:
 		int m_iVersion;
-
+		CParameter* m_pParam;
+		CEndian* m_pEndian;
 };
 
 
