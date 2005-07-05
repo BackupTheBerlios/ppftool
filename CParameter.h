@@ -78,7 +78,11 @@
 #define DESCRIPTION_SHORT "-s"
 #define DESCRIPTION_LONG "--description"
 
-#define TYPE_FILENAME 1
+#define TYPE_BINARYNAME 1
+#define TYPE_ORIGINALNAME 2
+#define TYPE_PPFNAME 3
+#define TYPE_FILEIDNAME 4
+#define TYPE_DESCRIPTIONNAME 5
 
 struct Parameters
 {

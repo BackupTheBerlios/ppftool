@@ -27,31 +27,19 @@
  *
  */
 
-#ifndef _CPPF__H
-#define _CPPF__H
+#ifndef _CPPF10__H
+#define _CPPF10__H
 
+#include "CPPF.h"
 #include "CParameter.h"
 #include "CEndian.h"
 
-class CPPF
+class CPPF10 : public CPPF
 {
 	public:
-		CPPF(CParameter* param, CEndian *endian);
-		~CPPF();
-		bool Evaluate();
+		CPPF10(CParameter* param, CEndian* endian);
+		~CPPF10();
 
-	private:
-		bool OpenAll();
-		void CloseAll();
-
-	protected:
-		int m_iVersion;
-		CParameter* m_pParam;
-		CEndian* m_pEndian;
-		FILE *m_pOriginal;
-		FILE *m_pPatched;
-		FILE *m_pFileID;
-		FILE *m_pPPF;
 };
 
 

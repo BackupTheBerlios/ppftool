@@ -33,10 +33,15 @@ CPPF::CPPF(CParameter* param, CEndian *endian)
 {
 	m_pParam = param;
 	m_pEndian = endian;
+	m_pOriginal=NULL;
+	m_pPatched=NULL;
+	m_pPPF=NULL;
+	m_pFileID=NULL;
 }
 
 CPPF::~CPPF()
 {
+	CloseAll();
 }
 
 bool CPPF::Evaluate()
@@ -47,18 +52,92 @@ bool CPPF::Evaluate()
 	RetVal=true;
 	if(m_pParam->GetParameters().apply==1 && m_pParam->GetParameters().create==1)
 	{
-		printf("Cannot apply and create the same time.\n");
+		printf("Cannot apply and create the same time\n");
 		RetVal=false;
 	}
 	else if(m_pParam->GetParameters().apply==0 && m_pParam->GetParameters().create==0)
 	{
-		printf("Please specify either create or apply.\n");
+		printf("Please specify either create or apply\n");
 		RetVal=false;
 	}
 	else
 	{
-		//Try to open all files.
+		RetVal = OpenAll();
 	}
 
 	return(RetVal);
+}
+
+bool CPPF::OpenAll()
+{
+	bool RetVal;
+
+	RetVal=true;
+	
+	if(m_pParam->GetString(TYPE_ORIGINALNAME) != NULL)
+	{
+		m_pOriginal=fopen(m_pParam->GetString(TYPE_ORIGINALNAME),"rb+");
+		if(m_pOriginal==NULL)
+		{
+			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_ORIGINALNAME));
+			RetVal=false;
+		}
+	}
+
+	if(m_pParam->GetString(TYPE_BINARYNAME) != NULL)
+	{
+		m_pPatched=fopen(m_pParam->GetString(TYPE_BINARYNAME),"rb");
+		if(m_pPatched==NULL)
+		{
+			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_BINARYNAME));
+			RetVal=false;
+		}
+	}
+
+	if(m_pParam->GetString(TYPE_FILEIDNAME) != NULL)
+	{
+		m_pFileID=fopen(m_pParam->GetString(TYPE_FILEIDNAME),"rb");
+		if(m_pFileID==NULL)
+		{
+			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_FILEIDNAME));
+			RetVal=false;
+		}
+	}
+/*
+	if(m_pParam->GetString(TYPE_PPFNAME) != NULL)
+	{
+		m_pPPF=fopen(m_pParam->GetString(TYPE_PPFNAME),"rb");
+		if(m_pPPF==NULL)
+		{
+			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_PPFNAME));
+			RetVal=false;
+		}
+	}
+*/
+
+	return(RetVal);
+}
+
+void CPPF::CloseAll()
+{
+	if(m_pOriginal!=NULL)
+	{
+		fclose(m_pOriginal);
+	}
+
+	if(m_pPatched!=NULL)
+	{
+		fclose(m_pPatched);
+	}
+
+	if(m_pFileID!=NULL)
+	{
+		fclose(m_pFileID);
+	}
+
+	if(m_pPPF!=NULL)
+	{
+		fclose(m_pPPF);
+	}
+
 }

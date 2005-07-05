@@ -319,7 +319,30 @@ int CParameter::GetUseVersion()
 
 char* CParameter::GetString(int type)
 {
-	return(NULL);
+	char* RetVal;
+
+	switch(type)
+	{
+		case TYPE_BINARYNAME:
+			RetVal = (char*)m_pBinaryName;
+			break;
+		case TYPE_ORIGINALNAME:
+			RetVal = (char*)m_pOriginalName;
+			break;
+		case TYPE_PPFNAME:
+			RetVal = (char*)m_pPPFName;
+			break;
+		case TYPE_FILEIDNAME:
+			RetVal = (char*)m_pFileIDName;
+			break;
+		case TYPE_DESCRIPTIONNAME:
+			RetVal = (char*)m_pDescription;
+			break;
+		default:
+			RetVal=NULL;
+			break;
+	}
+	return(RetVal);
 }
 
 

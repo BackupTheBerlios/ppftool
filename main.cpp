@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include "CEndian.h"
 #include "CParameter.h"
-#include "CPPF.h"
+#include "CPPF10.h"
 #include "License.h"
 
 #include <string.h>
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 
 	CParameter *param = new CParameter(argc, argv);
 	CEndian *endian = new CEndian();
-	CPPF *ppf = new CPPF(param, endian);
+	CPPF10 *ppf = new CPPF10(param, endian);
 
 	// Evaluate parameters given in shell/console, show Usage if something is
 	// inconsistent
