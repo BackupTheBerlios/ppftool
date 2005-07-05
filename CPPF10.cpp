@@ -38,12 +38,45 @@ CPPF10::~CPPF10()
 {
 }
 
+bool CPPF10::DoPPF()
+{
+  bool RetVal;
+
+  if(m_pParam->GetParameters().create==1)
+  {
+    CreatePPF();
+  }
+  else if(m_pParam->GetParameters().apply==1)
+  {
+    ApplyPPF();
+  }
+  
+  return(true);
+}
+
+void CPPF10::CreatePPF()
+{
+  OFFT size;
+  
+  SEEK(m_pOriginal,0,SEEK_SET);  
+
+  while(GetNext(m_pOriginal,&size))
+  {
+    printf("Chunk 1: %d\n",size);
+  }
+  
+}
+
+void CPPF10::ApplyPPF()
+{
+}
+
 bool CPPF10::Evaluate()
 {
 	bool RetVal;
 
 	RetVal=CPPF::Evaluate();
-	if(m_pParam->GetParameters().apply==1 && RetVal==true && m_pPPF!=NULL)
+	if(m_pParam->GetParameters().apply==1 && RetVal==true)
 	{
 		ReadHeader();
 	}

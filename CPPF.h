@@ -38,6 +38,8 @@
 #include "CEndian.h"
 #include "LFS.h"
 
+#define CHUNK_SIZE 1024*1024
+
 class CPPF
 {
 	public:
@@ -48,15 +50,25 @@ class CPPF
 	private:
 		bool OpenAll();
 		void CloseAll();
-
+    OFFT FileSize(FILE* f);
+    
 	protected:
-		int m_iVersion;
+    bool GetNext(FILE* f, OFFT* size);
+        
 		CParameter* m_pParam;
 		CEndian* m_pEndian;
 		FILE *m_pOriginal;
 		FILE *m_pPatched;
 		FILE *m_pFileID;
 		FILE *m_pPPF;
+		
+		OFFT m_oOriginal;
+		OFFT m_oPatched;
+		OFFT m_oFileID;
+		OFFT m_oPPF;
+		
+		void* m_pData;
+		
 };
 
 

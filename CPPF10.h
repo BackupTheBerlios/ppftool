@@ -48,10 +48,13 @@ class CPPF10 : public CPPF
 		CPPF10(CParameter* param, CEndian* endian);
 		~CPPF10();
 		bool Evaluate();
+		bool DoPPF();
 	private:
 		void CPPF10::ReadHeader();
+    void CreatePPF();
+    void ApplyPPF();
+    
 		PPF10Header m_Header;
-
 };
 
 

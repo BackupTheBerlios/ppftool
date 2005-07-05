@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 
 	CParameter *param = new CParameter(argc, argv);
 	CEndian *endian = new CEndian();
-	CPPF10 *ppf = new CPPF10(param, endian);
+	CPPF10 *ppf10 = new CPPF10(param, endian);
 
 	// Evaluate parameters given in shell/console, show Usage if something is
 	// inconsistent
@@ -99,18 +99,28 @@ int main(int argc, char **argv)
 	}
 
 	// Evaluate CPPF, to go sure everything the user entered in shell is okay
-	if(ppf->Evaluate()==false)
+	if(ppf10->Evaluate()==false)
 	{
 		delete(param);
 		delete(endian);
-		delete(ppf);
+		delete(ppf10);
 		return(-1);
 	}
+	else
+	{
+    if(ppf10->DoPPF()==false)
+    {
+  		delete(param);
+  		delete(endian);
+  		delete(ppf10);
+  		return(-1);
+    }
+  }
 
-
+  printf("Done.\n");
 	delete(param);
 	delete(endian);
-	delete(ppf);
+	delete(ppf10);
 	return(0);
 }
 

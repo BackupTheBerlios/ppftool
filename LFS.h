@@ -39,6 +39,7 @@
 	#define FREAD fread
 	#define	FWRITE fwrite
 	#define FCLOSE fclose
+	#define OFFT off_t
 #elif defined (__APPLE__) || defined (MACOSX)
 	#define OPEN fopen
 	#define SEEK fseeko
@@ -46,6 +47,7 @@
 	#define FREAD fread
 	#define	FWRITE fwrite
 	#define FCLOSE fclose
+	#define OFFT off_t	
 #endif
 
 #endif

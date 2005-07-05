@@ -33,15 +33,20 @@ CPPF::CPPF(CParameter* param, CEndian *endian)
 {
 	m_pParam = param;
 	m_pEndian = endian;
-	m_pOriginal=NULL;
-	m_pPatched=NULL;
-	m_pPPF=NULL;
-	m_pFileID=NULL;
+	m_pOriginal = NULL;
+	m_pPatched = NULL;
+	m_pPPF = NULL;
+	m_pFileID = NULL;
+	m_pData = NULL;
 }
 
 CPPF::~CPPF()
 {
 	CloseAll();
+	if(m_pData!=NULL)
+	{
+    free(m_pData);
+  }
 }
 
 bool CPPF::Evaluate()
@@ -63,9 +68,57 @@ bool CPPF::Evaluate()
 	else
 	{
 		RetVal = OpenAll();
+    if(RetVal == true)
+    {
+      if(m_pParam->GetParameters().apply==1)
+      {
+        if(m_pPPF == NULL || m_pOriginal == NULL)
+        {
+          printf("Specifiy at least --ppf and --original for apply!\n");
+          RetVal=false;
+        }
+      }
+      else if(m_pParam->GetParameters().create==1)
+      {
+        if(m_pPPF == NULL || m_pOriginal == NULL || m_pPatched == NULL)
+        {
+          printf("Specifiy at least --ppf, --original and --patched for create!\n");
+          RetVal=false;
+        }
+      }
+    }                            
 	}
-
+	
+	m_pData=malloc(CHUNK_SIZE);
+	if(m_pData==NULL)
+	{
+    printf("Could not allocate workspace memory\n");
+    RetVal=false;
+  }
+  
 	return(RetVal);
+}
+
+OFFT CPPF::FileSize(FILE* f)
+{
+  SEEK(f,0,SEEK_END);
+  return(FTELL(f));
+}
+
+bool CPPF::GetNext(FILE* f, OFFT* size)
+{
+  OFFT s;
+  
+  s=fread(m_pData,1,CHUNK_SIZE,f);
+  *size=s;
+  if(s!=CHUNK_SIZE)
+  {
+    return(false);
+  }
+  else
+  {
+    return(true);
+  }
 }
 
 bool CPPF::OpenAll()
@@ -82,6 +135,10 @@ bool CPPF::OpenAll()
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_ORIGINALNAME));
 			RetVal=false;
 		}
+		else
+		{
+      m_oOriginal=FileSize(m_pOriginal);
+    }
 	}
 
 	if(m_pParam->GetString(TYPE_BINARYNAME) != NULL)
@@ -92,6 +149,10 @@ bool CPPF::OpenAll()
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_BINARYNAME));
 			RetVal=false;
 		}
+		else
+		{
+      m_oPatched=FileSize(m_pPatched);
+    }		
 	}
 
 	if(m_pParam->GetString(TYPE_FILEIDNAME) != NULL)
@@ -102,6 +163,10 @@ bool CPPF::OpenAll()
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_FILEIDNAME));
 			RetVal=false;
 		}
+		else
+		{
+      m_oFileID=FileSize(m_pFileID);
+    }		
 	}
 
 	if(m_pParam->GetString(TYPE_PPFNAME) != NULL)
@@ -120,6 +185,11 @@ bool CPPF::OpenAll()
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_PPFNAME));
 			RetVal=false;
 		}
+		else
+		{
+      m_oPPF=FileSize(m_pPPF);
+    }		
+		
 	}
 
 	return(RetVal);
