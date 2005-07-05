@@ -30,6 +30,10 @@
 #ifndef _CPPF__H
 #define _CPPF__H
 
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "CParameter.h"
 #include "CEndian.h"
 #include "LFS.h"

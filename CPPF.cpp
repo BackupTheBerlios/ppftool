@@ -76,7 +76,7 @@ bool CPPF::OpenAll()
 	
 	if(m_pParam->GetString(TYPE_ORIGINALNAME) != NULL)
 	{
-		m_pOriginal=fopen(m_pParam->GetString(TYPE_ORIGINALNAME),"rb+");
+		m_pOriginal=OPEN(m_pParam->GetString(TYPE_ORIGINALNAME),"rb+");
 		if(m_pOriginal==NULL)
 		{
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_ORIGINALNAME));
@@ -86,7 +86,7 @@ bool CPPF::OpenAll()
 
 	if(m_pParam->GetString(TYPE_BINARYNAME) != NULL)
 	{
-		m_pPatched=fopen(m_pParam->GetString(TYPE_BINARYNAME),"rb");
+		m_pPatched=OPEN(m_pParam->GetString(TYPE_BINARYNAME),"rb");
 		if(m_pPatched==NULL)
 		{
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_BINARYNAME));
@@ -96,7 +96,7 @@ bool CPPF::OpenAll()
 
 	if(m_pParam->GetString(TYPE_FILEIDNAME) != NULL)
 	{
-		m_pFileID=fopen(m_pParam->GetString(TYPE_FILEIDNAME),"rb");
+		m_pFileID=OPEN(m_pParam->GetString(TYPE_FILEIDNAME),"rb");
 		if(m_pFileID==NULL)
 		{
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_FILEIDNAME));
@@ -108,12 +108,13 @@ bool CPPF::OpenAll()
 	{
 		if(m_pParam->GetParameters().apply==1)
 		{
-			m_pPPF=fopen(m_pParam->GetString(TYPE_PPFNAME),"rb+");
+			m_pPPF=OPEN(m_pParam->GetString(TYPE_PPFNAME),"rb+");
 		}
 		else
 		{
-			m_pPPF=fopen(m_pParam->GetString(TYPE_PPFNAME),"wb");
+			m_pPPF=OPEN(m_pParam->GetString(TYPE_PPFNAME),"wb");
 		}
+
 		if(m_pPPF==NULL)
 		{
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_PPFNAME));

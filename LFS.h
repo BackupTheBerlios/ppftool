@@ -32,14 +32,7 @@
 #ifndef _LFS__H
 #define _LFS__H
 
-#if defined (WIN32)
-	#define OPEN _open
-	#define SEEK _lseeki64
-	#define FTELL _telli64
-	#define FREAD _read
-	#define	FWRITE _write
-	#define FCLOSE _close
-#elif defined (LINUX)
+#if defined (LINUX) || defined (WIN32)
 	#define OPEN fopen64
 	#define SEEK fseeko64
 	#define FTELL ftello64
