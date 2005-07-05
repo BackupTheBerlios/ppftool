@@ -103,17 +103,23 @@ bool CPPF::OpenAll()
 			RetVal=false;
 		}
 	}
-/*
+
 	if(m_pParam->GetString(TYPE_PPFNAME) != NULL)
 	{
-		m_pPPF=fopen(m_pParam->GetString(TYPE_PPFNAME),"rb");
+		if(m_pParam->GetParameters().apply==1)
+		{
+			m_pPPF=fopen(m_pParam->GetString(TYPE_PPFNAME),"rb+");
+		}
+		else
+		{
+			m_pPPF=fopen(m_pParam->GetString(TYPE_PPFNAME),"wb");
+		}
 		if(m_pPPF==NULL)
 		{
 			printf("Cannot open file \"%s\"\n",m_pParam->GetString(TYPE_PPFNAME));
 			RetVal=false;
 		}
 	}
-*/
 
 	return(RetVal);
 }

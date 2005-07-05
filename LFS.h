@@ -27,33 +27,32 @@
  *
  */
 
-#ifndef _CPPF__H
-#define _CPPF__H
+// Large-File-Support. Adapt these lines to your OS to have 64 Bit I/O Support!
 
-#include "CParameter.h"
-#include "CEndian.h"
-#include "LFS.h"
+#ifndef _LFS__H
+#define _LFS__H
 
-class CPPF
-{
-	public:
-		CPPF(CParameter* param, CEndian *endian);
-		~CPPF();
-		bool Evaluate();
-
-	private:
-		bool OpenAll();
-		void CloseAll();
-
-	protected:
-		int m_iVersion;
-		CParameter* m_pParam;
-		CEndian* m_pEndian;
-		FILE *m_pOriginal;
-		FILE *m_pPatched;
-		FILE *m_pFileID;
-		FILE *m_pPPF;
-};
-
+#if defined (WIN32)
+	#define OPEN _open
+	#define SEEK _lseeki64
+	#define FTELL _telli64
+	#define FREAD _read
+	#define	FWRITE _write
+	#define FCLOSE _close
+#elif defined (LINUX)
+	#define OPEN fopen64
+	#define SEEK fseeko64
+	#define FTELL ftello64
+	#define FREAD fread
+	#define	FWRITE fwrite
+	#define FCLOSE fclose
+#elif defined (__APPLE__) || defined (MACOSX)
+	#define OPEN fopen
+	#define SEEK fseeko
+	#define FTELL ftello
+	#define FREAD fread
+	#define	FWRITE fwrite
+	#define FCLOSE fclose
+#endif
 
 #endif

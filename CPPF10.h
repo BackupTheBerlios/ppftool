@@ -33,12 +33,24 @@
 #include "CPPF.h"
 #include "CParameter.h"
 #include "CEndian.h"
+#include "LFS.h"
+
+struct PPF10Header
+{
+	char magic[5];
+	char method;
+	char description[50];
+};
 
 class CPPF10 : public CPPF
 {
 	public:
 		CPPF10(CParameter* param, CEndian* endian);
 		~CPPF10();
+		bool Evaluate();
+	private:
+		void CPPF10::ReadHeader();
+		PPF10Header m_Header;
 
 };
 

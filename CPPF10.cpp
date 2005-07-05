@@ -31,8 +31,28 @@
 
 CPPF10::CPPF10(CParameter* param, CEndian* endian) :CPPF(param, endian)
 {
+	memset(&m_Header,0,sizeof(m_Header));
 }
 
 CPPF10::~CPPF10()
 {
 }
+
+bool CPPF10::Evaluate()
+{
+	bool RetVal;
+
+	RetVal=CPPF::Evaluate();
+	if(m_pParam->GetParameters().apply==1 && RetVal==true && m_pPPF!=NULL)
+	{
+		ReadHeader();
+	}
+
+	return(RetVal);
+}
+
+void CPPF10::ReadHeader()
+{
+	printf("ReadHeader!\n");
+}
+
