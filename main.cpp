@@ -28,19 +28,17 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include "CEndian.h"
 #include "CParameter.h"
 #include "CPPF10.h"
 #include "License.h"
-
-#include <string.h>
 
 #define VERSION "1.0.0"
 #define DATE "Jun 27 2005"
 
 int main(int argc, char **argv)
 {
-
 	CParameter *param = new CParameter(argc, argv);
 	CEndian *endian = new CEndian();
 	CPPF10 *ppf10 = new CPPF10(param, endian);
