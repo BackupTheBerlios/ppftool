@@ -37,8 +37,6 @@ CPPF10::~CPPF10()
 {
 }
 
-// TODO: Unglcihes filesize-check!
-
 bool CPPF10::DoPPF()
 {
   bool RetVal;
@@ -60,13 +58,20 @@ void CPPF10::CreatePPF()
   OFFT size;
   int position;
   
+  if(m_oPatched != m_oOriginal)
+  {
+    printf("Filesizes of patched and original binary files are not equal");
+    return;
+  }
+  
   WriteHeader();
   SEEK(m_pOriginal,0,SEEK_SET);  
   SEEK(m_pPatched,0,SEEK_SET);  
   
   position=0;
+  printf("Writing Patch-Data... ");
   while(GetNext(&size))
-  {
+  { 
     ExamineChunk(size, position);
     position++;
   }
@@ -75,6 +80,8 @@ void CPPF10::CreatePPF()
   {
     ExamineChunk(size, position);
   }       
+  
+  printf("done\n");
 }
 
 void CPPF10::ExamineChunk(OFFT amount, int position)
@@ -88,8 +95,8 @@ void CPPF10::ExamineChunk(OFFT amount, int position)
     if(*((unsigned char*)m_pDataO+i) != *((unsigned char*)m_pDataP+i))
     {
       size=0; z=0;
-      pos=amount*position+i;
-      while(*((unsigned char*)m_pDataO+i) != *((unsigned char*)m_pDataP+i) && i<amount && z <= 255)
+      pos=CHUNK_SIZE*position+i;
+      while(*((unsigned char*)m_pDataO+i) != *((unsigned char*)m_pDataP+i) && i<amount && z < 255)
       {
         found[z++]=*((unsigned char*)m_pDataP+i);
         i++; size++;
@@ -104,34 +111,39 @@ void CPPF10::ExamineChunk(OFFT amount, int position)
 
 void CPPF10::ApplyPPF()
 {
+  SEEK(m_pPPF,0,SEEK_SET);
+  ReadHeader();
+  if(strcmp(m_Header.magic, "PPF10")!=0)
+  {
+    printf("Patch is no PPF Version 1.0 file");
+    return;
+  }
+
+  if(m_Header.method!=0)
+  {
+    printf("Unknown method");
+    return;
+  }
+  
   
 }
 
-bool CPPF10::Evaluate()
-{
-	bool RetVal;
-
-	RetVal=CPPF::Evaluate();
-	if(m_pParam->GetParameters().apply==1 && RetVal==true)
-	{
-		ReadHeader();
-	}
-
-	return(RetVal);
-}
 
 void CPPF10::ReadHeader()
 {
-	printf("ReadHeader!\n");
+  fread(&m_Header,sizeof(m_Header),1,m_pPPF);  
 }
 
 void CPPF10::WriteHeader()
 {
+  
+  printf("Writing PPF-Header... ");
 	memset(&m_Header,0x20,sizeof(m_Header));
 	strncpy(m_Header.magic,"PPF10",5);
 	m_Header.method=0;
 	
 	strncpy(m_Header.description,m_pParam->GetString(TYPE_DESCRIPTIONNAME),strlen(m_pParam->GetString(TYPE_DESCRIPTIONNAME)));	  
   fwrite(&m_Header,sizeof(m_Header),1,m_pPPF);
+  printf("done\n");
 }
 

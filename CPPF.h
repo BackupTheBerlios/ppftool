@@ -40,6 +40,8 @@
 
 #define CHUNK_SIZE 1024*1024
 
+//TODO: View Patch Information!
+
 class CPPF
 {
 	public:

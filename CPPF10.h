@@ -47,7 +47,6 @@ class CPPF10 : public CPPF
 	public:
 		CPPF10(CParameter* param, CEndian* endian);
 		~CPPF10();
-		bool Evaluate();
 		bool DoPPF();
 	private:
 		void ReadHeader();
