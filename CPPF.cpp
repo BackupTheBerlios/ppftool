@@ -37,15 +37,21 @@ CPPF::CPPF(CParameter* param, CEndian *endian)
 	m_pPatched = NULL;
 	m_pPPF = NULL;
 	m_pFileID = NULL;
-	m_pData = NULL;
+	m_pDataP = NULL;
+	m_pDataO = NULL;
 }
 
 CPPF::~CPPF()
 {
 	CloseAll();
-	if(m_pData!=NULL)
+	if(m_pDataP!=NULL)
 	{
-    free(m_pData);
+    free(m_pDataP);
+  }
+  
+	if(m_pDataO!=NULL)
+	{
+    free(m_pDataO);
   }
 }
 
@@ -89,8 +95,15 @@ bool CPPF::Evaluate()
     }                            
 	}
 	
-	m_pData=malloc(CHUNK_SIZE);
-	if(m_pData==NULL)
+	m_pDataP=malloc(CHUNK_SIZE);
+	if(m_pDataP==NULL)
+	{
+    printf("Could not allocate workspace memory\n");
+    RetVal=false;
+  }
+
+	m_pDataO=malloc(CHUNK_SIZE);
+	if(m_pDataO==NULL)
 	{
     printf("Could not allocate workspace memory\n");
     RetVal=false;
@@ -105,11 +118,12 @@ OFFT CPPF::FileSize(FILE* f)
   return(FTELL(f));
 }
 
-bool CPPF::GetNext(FILE* f, OFFT* size)
+bool CPPF::GetNext(OFFT* size)
 {
   OFFT s;
   
-  s=fread(m_pData,1,CHUNK_SIZE,f);
+  s=fread(m_pDataP,1,CHUNK_SIZE,m_pPatched);
+  fread(m_pDataO,1,CHUNK_SIZE,m_pOriginal);
   *size=s;
   if(s!=CHUNK_SIZE)
   {

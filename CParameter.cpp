@@ -38,7 +38,10 @@ CParameter::CParameter(int argc, char **argv)
 	m_pPPFName=NULL;
 	m_pFileIDName=NULL;
 	m_pDescription=NULL;
-	m_iUseVersion=0;
+	m_iUseVersion=0;	
+	memset(&m_pNullDescription,0x20,50);
+	strncpy(m_pNullDescription,"Created by PPF-Tool (http://ppftool.berlios.de)",47);
+  memset(&m_Param,0,sizeof(m_Param));
 }
 
 CParameter::~CParameter()
@@ -321,6 +324,7 @@ char* CParameter::GetString(int type)
 {
 	char* RetVal;
 
+
 	switch(type)
 	{
 		case TYPE_BINARYNAME:
@@ -336,8 +340,15 @@ char* CParameter::GetString(int type)
 			RetVal = (char*)m_pFileIDName;
 			break;
 		case TYPE_DESCRIPTIONNAME:
-			RetVal = (char*)m_pDescription;
-			break;
+      if(m_Param.description==0)
+      {
+        RetVal = m_pNullDescription;
+      }
+      else
+      {
+  			RetVal = (char*)m_pDescription;
+      }
+			break;      
 		default:
 			RetVal=NULL;
 			break;

@@ -31,12 +31,13 @@
 
 CPPF10::CPPF10(CParameter* param, CEndian* endian) :CPPF(param, endian)
 {
-	memset(&m_Header,0,sizeof(m_Header));
 }
 
 CPPF10::~CPPF10()
 {
 }
+
+// TODO: Unglcihes filesize-check!
 
 bool CPPF10::DoPPF()
 {
@@ -57,18 +58,53 @@ bool CPPF10::DoPPF()
 void CPPF10::CreatePPF()
 {
   OFFT size;
+  int position;
   
+  WriteHeader();
   SEEK(m_pOriginal,0,SEEK_SET);  
-
-  while(GetNext(m_pOriginal,&size))
+  SEEK(m_pPatched,0,SEEK_SET);  
+  
+  position=0;
+  while(GetNext(&size))
   {
-    printf("Chunk 1: %d\n",size);
+    ExamineChunk(size, position);
+    position++;
+  }
+  
+  if(size!=0)
+  {
+    ExamineChunk(size, position);
+  }       
+}
+
+void CPPF10::ExamineChunk(OFFT amount, int position)
+{
+  unsigned char found[256];
+  unsigned char size;
+  int z, pos;
+  
+  for(int i=0;i<amount;i++)
+  {
+    if(*((unsigned char*)m_pDataO+i) != *((unsigned char*)m_pDataP+i))
+    {
+      size=0; z=0;
+      pos=amount*position+i;
+      while(*((unsigned char*)m_pDataO+i) != *((unsigned char*)m_pDataP+i) && i<amount && z <= 255)
+      {
+        found[z++]=*((unsigned char*)m_pDataP+i);
+        i++; size++;
+      }
+      fwrite(&pos,4,1,m_pPPF);
+      fwrite(&size,1,1,m_pPPF);
+      fwrite(found,size,1,m_pPPF);
+    }
   }
   
 }
 
 void CPPF10::ApplyPPF()
 {
+  
 }
 
 bool CPPF10::Evaluate()
@@ -87,5 +123,15 @@ bool CPPF10::Evaluate()
 void CPPF10::ReadHeader()
 {
 	printf("ReadHeader!\n");
+}
+
+void CPPF10::WriteHeader()
+{
+	memset(&m_Header,0x20,sizeof(m_Header));
+	strncpy(m_Header.magic,"PPF10",5);
+	m_Header.method=0;
+	
+	strncpy(m_Header.description,m_pParam->GetString(TYPE_DESCRIPTIONNAME),strlen(m_pParam->GetString(TYPE_DESCRIPTIONNAME)));	  
+  fwrite(&m_Header,sizeof(m_Header),1,m_pPPF);
 }
 

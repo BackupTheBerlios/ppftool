@@ -128,6 +128,7 @@ class CParameter
 		void* m_pPPFName;
 		void* m_pFileIDName;
 		void* m_pDescription;
+		char m_pNullDescription[50];
 		int m_iUseVersion;
 };
 

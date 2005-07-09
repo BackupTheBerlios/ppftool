@@ -53,7 +53,7 @@ class CPPF
     OFFT FileSize(FILE* f);
     
 	protected:
-    bool GetNext(FILE* f, OFFT* size);
+    bool GetNext(OFFT* size);
         
 		CParameter* m_pParam;
 		CEndian* m_pEndian;
@@ -67,7 +67,8 @@ class CPPF
 		OFFT m_oFileID;
 		OFFT m_oPPF;
 		
-		void* m_pData;
+		void* m_pDataP;
+		void* m_pDataO;
 		
 };
 

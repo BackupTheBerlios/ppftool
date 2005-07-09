@@ -50,9 +50,11 @@ class CPPF10 : public CPPF
 		bool Evaluate();
 		bool DoPPF();
 	private:
-		void CPPF10::ReadHeader();
+		void ReadHeader();
+    void WriteHeader();
     void CreatePPF();
     void ApplyPPF();
+    void ExamineChunk(OFFT amount, int position);
     
 		PPF10Header m_Header;
 };
