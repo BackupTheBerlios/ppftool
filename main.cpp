@@ -37,6 +37,8 @@
 #define VERSION "1.0.0"
 #define DATE "Jun 27 2005"
 
+//TODO: Tell the user if no differences has been found on create
+
 int main(int argc, char **argv)
 {
 	CParameter *param = new CParameter(argc, argv);

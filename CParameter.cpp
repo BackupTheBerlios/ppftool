@@ -48,7 +48,7 @@ CParameter::~CParameter()
 {
 	if(m_pBinaryName!=NULL)
 	{
-		free(m_pBinaryName);
+//		free(m_pBinaryName); //Known bug #1
 	}
 
 	if(m_pOriginalName!=NULL)

@@ -38,7 +38,7 @@
 struct PPF10Header
 {
 	char magic[5];
-	char method;
+	unsigned char method;
 	char description[50];
 };
 

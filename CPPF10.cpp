@@ -111,6 +111,10 @@ void CPPF10::ExamineChunk(OFFT amount, int position)
 
 void CPPF10::ApplyPPF()
 {
+  OFFT pos;
+  unsigned char size;
+  unsigned char data[256];
+  
   SEEK(m_pPPF,0,SEEK_SET);
   ReadHeader();
   if(strcmp(m_Header.magic, "PPF10")!=0)
@@ -125,13 +129,28 @@ void CPPF10::ApplyPPF()
     return;
   }
   
-  
+  printf("Patch-Description: %s\n",m_Header.description);  
+  printf("Applying patch... ");
+
+  SEEK(m_pPPF,56,SEEK_SET);
+  m_oPPF-=56;
+  while(m_oPPF>0)
+  {
+    fread(&pos,4,1,m_pPPF);
+    fread(&size,1,1,m_pPPF);
+    fread(data,(unsigned int)size,1,m_pPPF);
+    fseek(m_pOriginal,pos,SEEK_SET);
+    fwrite(data,(unsigned int)size,1,m_pOriginal);
+    m_oPPF=m_oPPF-5-size;
+  }  
+  printf("done\n");
 }
 
 
 void CPPF10::ReadHeader()
 {
   fread(&m_Header,sizeof(m_Header),1,m_pPPF);  
+  m_Header.description[50]=0;
 }
 
 void CPPF10::WriteHeader()

@@ -123,8 +123,8 @@ class CParameter
 		int m_iArgc;
 		char** m_pArgv;
 		Parameters m_Param;
-		void* m_pBinaryName;
 		void* m_pOriginalName;
+		void* m_pBinaryName;
 		void* m_pPPFName;
 		void* m_pFileIDName;
 		void* m_pDescription;
