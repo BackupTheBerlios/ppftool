@@ -32,10 +32,13 @@
 #include "CEndian.h"
 #include "CParameter.h"
 #include "CPPF10.h"
+#include "CPPF20.h"
 #include "License.h"
 
 #define VERSION "1.0.0"
 #define DATE "Jun 27 2005"
+
+void DeleteAll();
 
 //TODO: Tell the user if no differences has been found on create
 
@@ -43,21 +46,26 @@ int main(int argc, char **argv)
 {
 	CParameter *param = new CParameter(argc, argv);
 	CEndian *endian = new CEndian();
-	CPPF10 *ppf10 = new CPPF10(param, endian);
-
+  CPPF10 *ppf10 = new CPPF10(param, endian);
+  CPPF20 *ppf20 = new CPPF20(param, endian);
+  
 	// Evaluate parameters given in shell/console, show Usage if something is
 	// inconsistent
 	if(param->Evaluate() == false && param->GetParameters().unknown >= 1)
 	{
-		delete(param);
-		delete(endian);
+    delete(param);
+    delete(endian);
+    delete(ppf10);
+    delete(ppf20);
 		return(-1);
 	}
 	else if(param->Evaluate() == false && param->GetParameters().unknown == 0)
 	{
 		param->ShowUsage();
-		delete(param);
-		delete(endian);
+    delete(param);
+    delete(endian);
+    delete(ppf10);
+    delete(ppf20);
 		return(-1);
 	}
 
@@ -65,8 +73,10 @@ int main(int argc, char **argv)
 	if(param->GetParameters().license == 1)
 	{
 		printf("%s",license);
-		delete(param);
-		delete(endian);
+    delete(param);
+    delete(endian);
+    delete(ppf10);
+    delete(ppf20);
 		return(0);
 	}
 
@@ -74,8 +84,10 @@ int main(int argc, char **argv)
 	if(param->GetParameters().help == 1)
 	{
 		param->ShowUsage();
-		delete(param);
-		delete(endian);
+    delete(param);
+    delete(endian);
+    delete(ppf10);
+    delete(ppf20);
 		return(0);
 	}
 
@@ -93,34 +105,75 @@ int main(int argc, char **argv)
 		{
 			printf("Endian Format .. : %s\n","Little Endian");
 		}
-		delete(param);
-		delete(endian);
+    delete(param);
+    delete(endian);
+    delete(ppf10);
+    delete(ppf20);
 		return(0);
 	}
 
-	// Evaluate CPPF, to go sure everything the user entered in shell is okay
-	if(ppf10->Evaluate()==false)
-	{
-		delete(param);
-		delete(endian);
-		delete(ppf10);
-		return(-1);
-	}
-	else
-	{
-    if(ppf10->DoPPF()==false)
-    {
-  		delete(param);
-  		delete(endian);
-  		delete(ppf10);
-  		return(-1);
-    }
+  switch(param->GetUseVersion())
+  {
+    case 0:
+    case 3:
+      break;
+    case 1:
+      if(ppf10->Evaluate()==false)
+      {
+        delete(param);
+        delete(endian);
+        delete(ppf10);
+        delete(ppf20);
+        return(-1);
+      }
+      else
+      {
+        if(ppf10->DoPPF()==false)
+        {
+          delete(param);
+          delete(endian);
+          delete(ppf10);
+          delete(ppf20);
+          return(-1);          
+        }
+      }
+      break;
+    case 2:
+      if(ppf20->Evaluate()==false)
+      {
+        delete(param);
+        delete(endian);
+        delete(ppf10);
+        delete(ppf20);
+        return(-1);
+      }
+      else
+      {
+        if(ppf20->DoPPF()==false)
+        {
+          delete(param);
+          delete(endian);
+          delete(ppf10);
+          delete(ppf20);
+          return(-1);          
+        }
+      }
+      break;
+    default:
+      printf("Unknown version %d\n",param->GetUseVersion());
+      delete(param);
+      delete(endian);
+      delete(ppf10);
+      delete(ppf20);
+      return(-1);                
+      break;
   }
-
+  
   printf("Done.\n");
-	delete(param);
-	delete(endian);
-	delete(ppf10);
+  delete(param);
+  delete(endian);
+  delete(ppf10);
+  delete(ppf20);
 	return(0);
 }
 
