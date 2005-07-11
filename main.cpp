@@ -33,6 +33,7 @@
 #include "CParameter.h"
 #include "CPPF10.h"
 #include "CPPF20.h"
+#include "CPPF30.h"
 #include "License.h"
 
 #define VERSION "1.0.0"
@@ -48,6 +49,7 @@ int main(int argc, char **argv)
 	CEndian *endian = new CEndian();
   CPPF10 *ppf10 = new CPPF10(param, endian);
   CPPF20 *ppf20 = new CPPF20(param, endian);
+  CPPF30 *ppf30 = new CPPF30(param, endian);
   
 	// Evaluate parameters given in shell/console, show Usage if something is
 	// inconsistent
@@ -57,6 +59,7 @@ int main(int argc, char **argv)
     delete(endian);
     delete(ppf10);
     delete(ppf20);
+    delete(ppf30);
 		return(-1);
 	}
 	else if(param->Evaluate() == false && param->GetParameters().unknown == 0)
@@ -66,6 +69,7 @@ int main(int argc, char **argv)
     delete(endian);
     delete(ppf10);
     delete(ppf20);
+    delete(ppf30);
 		return(-1);
 	}
 
@@ -77,6 +81,7 @@ int main(int argc, char **argv)
     delete(endian);
     delete(ppf10);
     delete(ppf20);
+    delete(ppf30);
 		return(0);
 	}
 
@@ -88,6 +93,7 @@ int main(int argc, char **argv)
     delete(endian);
     delete(ppf10);
     delete(ppf20);
+    delete(ppf30);
 		return(0);
 	}
 
@@ -109,6 +115,7 @@ int main(int argc, char **argv)
     delete(endian);
     delete(ppf10);
     delete(ppf20);
+    delete(ppf30);
 		return(0);
 	}
 
@@ -116,6 +123,27 @@ int main(int argc, char **argv)
   {
     case 0:
     case 3:
+      if(ppf30->Evaluate()==false)
+      {
+        delete(param);
+        delete(endian);
+        delete(ppf10);
+        delete(ppf20);
+        delete(ppf30);
+        return(-1);
+      }
+      else
+      {
+        if(ppf30->DoPPF()==false)
+        {
+          delete(param);
+          delete(endian);
+          delete(ppf10);
+          delete(ppf20);
+          delete(ppf30);
+          return(-1);          
+        }
+      }
       break;
     case 1:
       if(ppf10->Evaluate()==false)
@@ -124,6 +152,7 @@ int main(int argc, char **argv)
         delete(endian);
         delete(ppf10);
         delete(ppf20);
+        delete(ppf30);
         return(-1);
       }
       else
@@ -134,6 +163,7 @@ int main(int argc, char **argv)
           delete(endian);
           delete(ppf10);
           delete(ppf20);
+          delete(ppf30);
           return(-1);          
         }
       }
@@ -145,6 +175,7 @@ int main(int argc, char **argv)
         delete(endian);
         delete(ppf10);
         delete(ppf20);
+        delete(ppf30);
         return(-1);
       }
       else
@@ -155,6 +186,7 @@ int main(int argc, char **argv)
           delete(endian);
           delete(ppf10);
           delete(ppf20);
+          delete(ppf30);
           return(-1);          
         }
       }
@@ -165,6 +197,7 @@ int main(int argc, char **argv)
       delete(endian);
       delete(ppf10);
       delete(ppf20);
+      delete(ppf30);
       return(-1);                
       break;
   }
@@ -174,6 +207,7 @@ int main(int argc, char **argv)
   delete(endian);
   delete(ppf10);
   delete(ppf20);
+  delete(ppf30);
 	return(0);
 }
 

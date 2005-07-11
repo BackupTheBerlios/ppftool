@@ -15,7 +15,8 @@ OBJS	= main.o \
 	  CParameter.o \
 	  CEndian.o \
 	  CPPF.o \
-	  CPPF10.o
+	  CPPF10.o \
+	  CPPF20.o
 
 all: ppftool
 
